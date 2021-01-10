@@ -1,10 +1,43 @@
-import React from 'react';
+import React, {Component} from 'react';
 import logo from './logo.svg';
 import './App.css';
 import { cars } from './demo';
 import CarItem from './CarItem';
+import axios from 'axios';
 
-function App(): JSX.Element {
+class App extends Component {
+  state = {
+    values: []
+  }
+
+  componentDidMount() {
+    axios.get('http://localhost:5000/api/values')
+      .then((response) =>{
+        this.setState({
+          values: response.data
+        });
+      });
+  }
+
+  render(){
+    return(
+      <div className="App">
+        <header className="App-header">
+          <img src={logo} className='App-logo' alt='logo'/>
+          <ul>
+            {
+              this.state.values.map((value:any) =>(
+                <li key={value.id}>{value.name}</li>
+              ))
+            }
+          </ul>
+        </header>
+      </div>
+    );
+  }
+}
+
+/*function App(): JSX.Element {
   return (
     <div className="App">
       <ul>
@@ -24,6 +57,6 @@ function App(): JSX.Element {
       </ul>
     </div>
   );
-}
+}*/
 
 export default App;
