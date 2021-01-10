@@ -4,6 +4,7 @@ import './App.css';
 import { cars } from './demo';
 import CarItem from './CarItem';
 import axios from 'axios';
+import { Header, Icon, List } from 'semantic-ui-react'
 
 class App extends Component {
   state = {
@@ -21,7 +22,20 @@ class App extends Component {
 
   render(){
     return(
-      <div className="App">
+      <div>
+        <Header as='h2'>
+          <Icon name='users' />
+          <Header.Content>Reactivities</Header.Content>
+        </Header>   
+        <List>
+          {
+            this.state.values.map((value:any) =>(
+              <List.Item key={value.id}>{value.name}</List.Item>
+            ))
+          }
+        </List>
+      </div>
+      /*<div className="App">
         <header className="App-header">
           <img src={logo} className='App-logo' alt='logo'/>
           <ul>
@@ -32,7 +46,7 @@ class App extends Component {
             }
           </ul>
         </header>
-      </div>
+      </div>*/
     );
   }
 }
