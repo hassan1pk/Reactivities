@@ -4,17 +4,22 @@ import { cars } from './demo';
 import CarItem from './CarItem';
 import axios from 'axios';
 import { Header, Icon, List } from 'semantic-ui-react'
+import {IActivity} from '../models/activity'
 
-class App extends Component {
-  state = {
-    values: []
+interface IState {
+  activities : IActivity[];
+}
+
+class App extends Component<{}, IState> {
+  readonly state: IState = {
+    activities: []
   }
 
   componentDidMount() {
-    axios.get('http://localhost:5000/api/values')
+    axios.get<IActivity[]>('http://localhost:5000/api/activities')
       .then((response) =>{
         this.setState({
-          values: response.data
+          activities: response.data
         });
       });
   }
@@ -28,8 +33,8 @@ class App extends Component {
         </Header>   
         <List>
           {
-            this.state.values.map((value:any) =>(
-              <List.Item key={value.id}>{value.name}</List.Item>
+            this.state.activities.map((activity) =>(
+              <List.Item key={activity.id}>{activity.title}</List.Item>
             ))
           }
         </List>
