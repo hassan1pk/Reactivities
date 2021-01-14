@@ -1,58 +1,45 @@
-import React, {Component} from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 import logo from './logo.svg';
-import { cars } from './demo';
-import CarItem from './CarItem';
+import { cars } from '../../demo';
+import CarItem from '../../CarItem';
 import axios from 'axios';
-import { Header, Icon, List } from 'semantic-ui-react'
-import {IActivity} from '../models/activity'
+import { Container, Header, Icon, List } from 'semantic-ui-react'
+import { IActivity } from '../models/activity'
+import NavBar from '../../features/nav/NavBar';
+import ActivityDashboard from '../../features/activities/dashboard/ActivityDashboard';
 
-interface IState {
-  activities : IActivity[];
-}
+const App = () => {
 
-class App extends Component<{}, IState> {
-  readonly state: IState = {
-    activities: []
-  }
+  const [activities, setActivities] = useState<IActivity[]>([]);
 
-  componentDidMount() {
+  useEffect(() => {
     axios.get<IActivity[]>('http://localhost:5000/api/activities')
-      .then((response) =>{
-        this.setState({
-          activities: response.data
-        });
+      .then((response) => {
+        setActivities(response.data);
       });
-  }
+  }, []);
 
-  render(){
-    return(
-      <div>
-        <Header as='h2'>
-          <Icon name='users' />
-          <Header.Content>Reactivities</Header.Content>
-        </Header>   
-        <List>
+  return (
+    <Fragment>
+      <NavBar />
+      <Container style={{ marginTop: '7em' }}>
+        <ActivityDashboard activities={activities} />
+      </Container>
+    </Fragment>
+    /*<div className="App">
+      <header className="App-header">
+        <img src={logo} className='App-logo' alt='logo'/>
+        <ul>
           {
-            this.state.activities.map((activity) =>(
-              <List.Item key={activity.id}>{activity.title}</List.Item>
+            this.state.values.map((value:any) =>(
+              <li key={value.id}>{value.name}</li>
             ))
           }
-        </List>
-      </div>
-      /*<div className="App">
-        <header className="App-header">
-          <img src={logo} className='App-logo' alt='logo'/>
-          <ul>
-            {
-              this.state.values.map((value:any) =>(
-                <li key={value.id}>{value.name}</li>
-              ))
-            }
-          </ul>
-        </header>
-      </div>*/
-    );
-  }
+        </ul>
+      </header>
+    </div>*/
+  );
+
 }
 
 /*function App(): JSX.Element {
