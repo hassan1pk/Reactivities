@@ -9,9 +9,11 @@ interface IProps {
     activities: IActivity[];
     selectActivity: (id: string) => void;
     selectedActivity: IActivity | null;
+    editMode: boolean;
+    setEditMode: (eidtMode: boolean) => void;
 }
 
-const ActivityDashboard = ({ activities, selectActivity, selectedActivity }: IProps): JSX.Element => {
+const ActivityDashboard = ({ activities, selectActivity, selectedActivity, editMode, setEditMode }: IProps): JSX.Element => {
     return (
         <Grid>
             <Grid.Column width={10}>
@@ -20,10 +22,12 @@ const ActivityDashboard = ({ activities, selectActivity, selectedActivity }: IPr
                 </List>
             </Grid.Column>
             <Grid.Column width={6}>
-                {selectedActivity &&
-                    <ActivityDetails activity={selectedActivity} />
+                {selectedActivity && !editMode &&
+                    <ActivityDetails activity={selectedActivity} setEditMode={setEditMode} />
                 }
-                <ActivityForm />
+                {editMode &&
+                    <ActivityForm />
+                }
             </Grid.Column>
         </Grid>
 
