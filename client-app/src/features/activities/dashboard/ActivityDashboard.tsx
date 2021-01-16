@@ -6,19 +6,23 @@ import ActivityForm from '../form/ActivityForm'
 import ActivityList from './ActivityList'
 
 interface IProps {
-    activities: IActivity[]
+    activities: IActivity[];
+    selectActivity: (id: string) => void;
+    selectedActivity: IActivity | null;
 }
 
-const ActivityDashboard = ({ activities }: IProps): JSX.Element => {
+const ActivityDashboard = ({ activities, selectActivity, selectedActivity }: IProps): JSX.Element => {
     return (
         <Grid>
             <Grid.Column width={10}>
                 <List>
-                    <ActivityList activities={activities} />
+                    <ActivityList activities={activities} selectActivity={selectActivity} />
                 </List>
             </Grid.Column>
             <Grid.Column width={6}>
-                <ActivityDetails />
+                {selectedActivity &&
+                    <ActivityDetails activity={selectedActivity} />
+                }
                 <ActivityForm />
             </Grid.Column>
         </Grid>
