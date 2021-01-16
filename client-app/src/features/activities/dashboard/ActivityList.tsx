@@ -5,9 +5,18 @@ import { IActivity } from '../../../app/models/activity'
 interface IProps {
     activities: IActivity[];
     selectActivity: (id: string) => void;
+    setEditMode: (editMode: boolean) => void;
 }
 
-const ActivityList = ({ activities, selectActivity }: IProps): JSX.Element => {
+
+
+const ActivityList = ({ activities, selectActivity, setEditMode }: IProps): JSX.Element => {
+
+    const handleActivityView = (activityId: string): void => {
+        selectActivity(activityId);
+        setEditMode(false);
+    }
+
     return (
         <Segment clearing>
             <Item.Group divided>
@@ -22,7 +31,7 @@ const ActivityList = ({ activities, selectActivity }: IProps): JSX.Element => {
                                     <div>{activity.city}, {activity.venue}</div>
                                 </Item.Description>
                                 <Item.Extra>
-                                    <Button onClick={() => selectActivity(activity.id)} floated='right' content='View' color='blue' />
+                                    <Button onClick={() => handleActivityView(activity.id)} floated='right' content='View' color='blue' />
                                     <Label basic content={activity.category} />
                                 </Item.Extra>
                             </Item.Content>

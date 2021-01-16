@@ -10,23 +10,24 @@ interface IProps {
     selectActivity: (id: string) => void;
     selectedActivity: IActivity | null;
     editMode: boolean;
-    setEditMode: (eidtMode: boolean) => void;
+    setEditMode: (editMode: boolean) => void;
+    setSelectedActivity: (activity: IActivity | null) => void;
 }
 
-const ActivityDashboard = ({ activities, selectActivity, selectedActivity, editMode, setEditMode }: IProps): JSX.Element => {
+const ActivityDashboard = ({ activities, selectActivity, selectedActivity, editMode, setEditMode, setSelectedActivity }: IProps): JSX.Element => {
     return (
         <Grid>
             <Grid.Column width={10}>
                 <List>
-                    <ActivityList activities={activities} selectActivity={selectActivity} />
+                    <ActivityList activities={activities} selectActivity={selectActivity} setEditMode={setEditMode} />
                 </List>
             </Grid.Column>
             <Grid.Column width={6}>
                 {selectedActivity && !editMode &&
-                    <ActivityDetails activity={selectedActivity} setEditMode={setEditMode} />
+                    <ActivityDetails activity={selectedActivity} setEditMode={setEditMode} setSelectedActivity={setSelectedActivity} />
                 }
                 {editMode &&
-                    <ActivityForm />
+                    <ActivityForm setEditMode={setEditMode} activity={selectedActivity} />
                 }
             </Grid.Column>
         </Grid>
