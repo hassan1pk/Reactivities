@@ -6,16 +6,12 @@ interface IProps {
     activities: IActivity[];
     selectActivity: (id: string) => void;
     setEditMode: (editMode: boolean) => void;
+    deleteActivity: (id: string) => void;
 }
 
 
 
-const ActivityList = ({ activities, selectActivity, setEditMode }: IProps): JSX.Element => {
-
-    const handleActivityView = (activityId: string): void => {
-        selectActivity(activityId);
-        setEditMode(false);
-    }
+const ActivityList = ({ activities, selectActivity, setEditMode, deleteActivity }: IProps): JSX.Element => {
 
     return (
         <Segment clearing>
@@ -31,7 +27,8 @@ const ActivityList = ({ activities, selectActivity, setEditMode }: IProps): JSX.
                                     <div>{activity.city}, {activity.venue}</div>
                                 </Item.Description>
                                 <Item.Extra>
-                                    <Button onClick={() => handleActivityView(activity.id)} floated='right' content='View' color='blue' />
+                                    <Button onClick={() => selectActivity(activity.id)} floated='right' content='View' color='blue' />
+                                    <Button onClick={() => deleteActivity(activity.id)} floated='right' content='Delete' color='red' />
                                     <Label basic content={activity.category} />
                                 </Item.Extra>
                             </Item.Content>

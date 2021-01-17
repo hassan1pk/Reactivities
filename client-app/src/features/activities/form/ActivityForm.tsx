@@ -1,13 +1,16 @@
 import React, { useState, ChangeEvent } from 'react'
 import { Button, Form, Segment } from 'semantic-ui-react'
 import { IActivity } from '../../../app/models/activity'
+import { v4 as uuid } from 'uuid';
 
 interface IProps {
     setEditMode: (eidtMode: boolean) => void;
     activity: IActivity | null;
+    createActivity: (activity: IActivity) => void;
+    editActivity: (activity: IActivity) => void;
 }
 
-const ActivityForm = ({ setEditMode, activity: initialFormState }: IProps): JSX.Element => {
+const ActivityForm = ({ setEditMode, activity: initialFormState, createActivity, editActivity }: IProps): JSX.Element => {
 
     const initializeForm = (): IActivity => {
         if (initialFormState) {
@@ -35,6 +38,12 @@ const ActivityForm = ({ setEditMode, activity: initialFormState }: IProps): JSX.
 
     const handleSubmit = () => {
         console.log(activity);
+        if (activity.id.length === 0) {
+            activity.id = uuid();
+            createActivity(activity);
+        } else {
+            editActivity(activity);
+        }
     }
 
     return (
@@ -43,7 +52,7 @@ const ActivityForm = ({ setEditMode, activity: initialFormState }: IProps): JSX.
                 <Form.Input onChange={handleInputChange} placeholder='Title' name='title' value={activity.title} />
                 <Form.TextArea onChange={handleInputChange} rows={2} placeholder='Description' name='description' value={activity.description} />
                 <Form.Input onChange={handleInputChange} placeholder='Category' name='category' value={activity.category} />
-                <Form.Input onChange={handleInputChange} type='date' placeholder='Date' name='date' value={activity.date} />
+                <Form.Input onChange={handleInputChange} type='datetime-local' placeholder='Date' name='date' value={activity.date} />
                 <Form.Input onChange={handleInputChange} placeholder='City' name='city' value={activity.city} />
                 <Form.Input onChange={handleInputChange} placeholder='Venue' name='venue' value={activity.venue} />
                 <Button floated='right' type='submit' content='Submit' positive />
