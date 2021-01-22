@@ -1,12 +1,10 @@
 import { observer } from 'mobx-react-lite'
-import React, { SyntheticEvent } from 'react'
+import React, { SyntheticEvent, useContext } from 'react'
 import { Item, Segment, Button, Label } from 'semantic-ui-react'
 import { IActivity } from '../../../app/models/activity'
+import ActivityStore from '../../../app/stores/activityStore'
 
 interface IProps {
-    activities: IActivity[];
-    selectActivity: (id: string) => void;
-    setEditMode: (editMode: boolean) => void;
     deleteActivity: (e: SyntheticEvent<HTMLButtonElement>, id: string) => void;
     submitting: boolean;
     target: string;
@@ -14,7 +12,10 @@ interface IProps {
 
 
 
-const ActivityList = ({ activities, selectActivity, setEditMode, deleteActivity, submitting, target }: IProps): JSX.Element => {
+const ActivityList = ({ deleteActivity, submitting, target }: IProps): JSX.Element => {
+
+    const activityStore = useContext(ActivityStore);
+    const { activities, selectActivity } = activityStore;
 
     return (
         <Segment clearing>
