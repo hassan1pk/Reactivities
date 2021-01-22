@@ -1,3 +1,4 @@
+import { observer } from 'mobx-react-lite'
 import React, { SyntheticEvent } from 'react'
 import { Grid, List } from 'semantic-ui-react'
 import { IActivity } from '../../../app/models/activity'
@@ -54,4 +55,4 @@ const ActivityDashboard = ({ activities, selectActivity, selectedActivity, editM
     )
 }
 
-export default ActivityDashboard
+export default observer(ActivityDashboard);

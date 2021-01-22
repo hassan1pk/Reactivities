@@ -1,8 +1,26 @@
-import { observable } from "mobx";
+import { action, makeObservable, observable } from "mobx";
 import { createContext } from "react";
+import { IActivity } from "../models/activity";
+import agent from "../api/agent";
 
 class ActivityStore {
-    @observable title = 'Hello from mobx'
+    @observable activities: IActivity[] = [];
+    @observable loadingInitial = true;
+
+    constructor() {
+        makeObservable(this)
+      }
+
+    @action loadActivities = () => {
+        this.loadingInitial = true;
+        agent.Activities.list()
+        .then(activities => {
+        activities.forEach((activity) => {
+          activity.date = activity.date.split(".")[0];
+          this.activities.push(activity);
+        });        
+      }).finally(() => this.loadingInitial = false);
+    }
 }
 
 export default createContext(new ActivityStore())
