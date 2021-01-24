@@ -1,7 +1,9 @@
-import { action, makeAutoObservable, observable } from "mobx";
+import { action, makeAutoObservable, observable, configure, runInAction } from "mobx";
 import { createContext, SyntheticEvent } from "react";
 import { IActivity } from "../models/activity";
 import agent from "../api/agent";
+
+configure({enforceActions: 'always'});
 
 class ActivityStore {
     @observable activityRegistry = new Map<string,IActivity>();
@@ -38,12 +40,15 @@ class ActivityStore {
         try
         {
             this.loadingInitial = true;
-            const activities = await agent.Activities.list();            
-            activities.forEach((activity) => {
-                activity.date = activity.date.split(".")[0];
-                //this.activities.push(activity);
-                this.activityRegistry.set(activity.id, activity);
-            }); 
+            const activities = await agent.Activities.list();   
+            runInAction(() => {
+                activities.forEach((activity) => {
+                    activity.date = activity.date.split(".")[0];
+                    //this.activities.push(activity);
+                    this.activityRegistry.set(activity.id, activity);
+                }); 
+            });         
+            
             
         }
         catch(error)
@@ -52,7 +57,10 @@ class ActivityStore {
         }
         finally
         {
-            this.loadingInitial = false;
+            runInAction(() => {
+                this.loadingInitial = false;
+            });
+            
         }
      
     }
@@ -63,16 +71,21 @@ class ActivityStore {
             this.submitting = true;
             await agent.Activities.create(activity);
             //this.activities.push(activity);
-            this.activityRegistry.set(activity.id, activity);
-            this.selectedActivity = activity;
-            this.editMode = false;
+            runInAction(() => {
+                this.activityRegistry.set(activity.id, activity);
+                this.selectedActivity = activity;
+                this.editMode = false;
+            });            
         }
         catch(error)
         {
             console.log(error);
         }
         finally{
-            this.submitting = false;
+            runInAction(() => {
+                this.submitting = false;
+            });
+            
         }
     }
 
@@ -81,16 +94,22 @@ class ActivityStore {
         {
             this.submitting = true;
             await agent.Activities.update(activity);
-            this.activityRegistry.set(activity.id, activity);
-            this.selectedActivity = activity;
-            this.editMode = false;
+            runInAction(() => {
+                this.activityRegistry.set(activity.id, activity);
+                this.selectedActivity = activity;
+                this.editMode = false;
+            });
+            
         }
         catch(error)
         {
             console.log(error);
         }
         finally {
-            this.submitting = false;            
+            runInAction(() => {
+                this.submitting = false;        
+            });
+                
         }
     }
 
@@ -100,7 +119,10 @@ class ActivityStore {
             this.submitting = true;
             this.target = event.currentTarget.name;
             await agent.Activities.delete(id);
-            this.activityRegistry.delete(id);
+            runInAction(() => {
+                this.activityRegistry.delete(id);
+            });
+            
         }
         catch(error)
         {
@@ -108,8 +130,11 @@ class ActivityStore {
         }
         finally
         {
-            this.submitting = false;
-            this.target = '';
+            runInAction(() => {
+                this.submitting = false;
+                this.target = '';
+            });
+            
         }
     }
 
