@@ -15,13 +15,13 @@ interface IProps {
 const ActivityList = ({ deleteActivity, submitting, target }: IProps): JSX.Element => {
 
     const activityStore = useContext(ActivityStore);
-    const { activities, selectActivity } = activityStore;
+    const { selectActivity, activitiesByDate } = activityStore;
 
     return (
         <Segment clearing>
             <Item.Group divided>
                 {
-                    activities.map((activity) => (
+                    activitiesByDate.map((activity) => (
                         <Item key={activity.id}>
                             <Item.Content>
                                 <Item.Header as='a'>{activity.title}</Item.Header>

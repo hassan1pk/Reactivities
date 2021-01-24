@@ -1,4 +1,4 @@
-import { action, makeObservable, observable } from "mobx";
+import { action, computed, makeAutoObservable, makeObservable, observable } from "mobx";
 import { createContext } from "react";
 import { IActivity } from "../models/activity";
 import agent from "../api/agent";
@@ -10,8 +10,12 @@ class ActivityStore {
     @observable editMode = false;
     @observable submitting = false;
 
+    get activitiesByDate() {
+        return this.activities.slice().sort((a,b) => Date.parse(a.date) - Date.parse(b.date));
+    }
+
     constructor() {
-        makeObservable(this)
+        makeAutoObservable(this)
       }
 
     /*@action loadActivities = () => {
@@ -31,11 +35,12 @@ class ActivityStore {
         try
         {
             this.loadingInitial = true;
-            this.activities = await agent.Activities.list()
-            this.activities.forEach((activity) => {
+            const activities = await agent.Activities.list();            
+            activities.forEach((activity) => {
                 activity.date = activity.date.split(".")[0];
                 this.activities.push(activity);
-            });  
+            }); 
+            
         }
         catch(error)
         {
@@ -48,7 +53,7 @@ class ActivityStore {
      
     }
 
-    @action createActivity = async(activity: IActivity) => {
+    @action createActivity = async (activity: IActivity) => {
         try
         {
             this.submitting = true;
