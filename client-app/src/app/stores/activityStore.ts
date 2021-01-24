@@ -13,7 +13,7 @@ class ActivityStore {
         makeObservable(this)
       }
 
-    @action loadActivities = () => {
+    /*@action loadActivities = () => {
         this.loadingInitial = true;
         agent.Activities.list()
         .then(activities => {
@@ -21,7 +21,30 @@ class ActivityStore {
           activity.date = activity.date.split(".")[0];
           this.activities.push(activity);
         });        
-      }).finally(() => this.loadingInitial = false);
+      })
+      .catch(error => console.log(error))
+      .finally(() => this.loadingInitial = false);
+    }*/
+
+    @action loadActivities = async () => {
+        try
+        {
+            this.loadingInitial = true;
+            this.activities = await agent.Activities.list()
+            this.activities.forEach((activity) => {
+                activity.date = activity.date.split(".")[0];
+                this.activities.push(activity);
+            });  
+        }
+        catch(error)
+        {
+            console.log(error);
+        }
+        finally
+        {
+            this.loadingInitial = false;
+        }
+     
     }
 
     @action selectActivity = (id: string) => {
