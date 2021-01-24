@@ -5,16 +5,13 @@ import { v4 as uuid } from 'uuid';
 import ActivityStore from '../../../app/stores/activityStore'
 
 interface IProps {
-    setEditMode: (eidtMode: boolean) => void;
     activity: IActivity | null;
-    editActivity: (activity: IActivity) => void;
-    submitting: boolean;
 }
 
-const ActivityForm = ({ setEditMode, activity: initialFormState, editActivity, submitting }: IProps): JSX.Element => {
+const ActivityForm = ({ activity: initialFormState }: IProps): JSX.Element => {
 
     const activityStore = useContext(ActivityStore);
-    const { createActivity } = activityStore;
+    const { createActivity, editActivity, submitting, cancelFormOpen } = activityStore;
 
     const initializeForm = (): IActivity => {
         if (initialFormState) {
@@ -60,7 +57,7 @@ const ActivityForm = ({ setEditMode, activity: initialFormState, editActivity, s
                 <Form.Input onChange={handleInputChange} placeholder='City' name='city' value={activity.city} />
                 <Form.Input onChange={handleInputChange} placeholder='Venue' name='venue' value={activity.venue} />
                 <Button loading={submitting} floated='right' type='submit' content='Submit' positive />
-                <Button onClick={() => setEditMode(false)} floated='right' type='Cancel' content='Cancel' />
+                <Button onClick={cancelFormOpen} floated='right' type='Cancel' content='Cancel' />
             </Form>
         </Segment>
     )
