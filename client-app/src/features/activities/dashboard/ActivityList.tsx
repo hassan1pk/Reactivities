@@ -1,5 +1,6 @@
 import { observer } from 'mobx-react-lite'
 import React, { useContext } from 'react'
+import { NavLink } from 'react-router-dom'
 import { Item, Segment, Button, Label } from 'semantic-ui-react'
 import ActivityStore from '../../../app/stores/activityStore'
 
@@ -22,7 +23,7 @@ const ActivityList = (): JSX.Element => {
                                     <div>{activity.city}, {activity.venue}</div>
                                 </Item.Description>
                                 <Item.Extra>
-                                    <Button onClick={() => selectActivity(activity.id)} floated='right' content='View' color='blue' />
+                                    <Button as={NavLink} to={`/activities/${activity.id}`} floated='right' content='View' color='blue' />
                                     <Button
                                         name={activity.id}
                                         loading={target === activity.id && submitting}

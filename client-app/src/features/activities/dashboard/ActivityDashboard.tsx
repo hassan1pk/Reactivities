@@ -9,7 +9,7 @@ import ActivityStore from '../../../app/stores/activityStore'
 const ActivityDashboard = (): JSX.Element => {
 
     const activityStore = useContext(ActivityStore);
-    const { selectedActivity, editMode } = activityStore;
+    const { activity, editMode } = activityStore;
     return (
         <Grid>
             <Grid.Column width={10}>
@@ -18,14 +18,7 @@ const ActivityDashboard = (): JSX.Element => {
                 </List>
             </Grid.Column>
             <Grid.Column width={6}>
-                {selectedActivity && !editMode && (
-                    <ActivityDetails />
-                )}
-                {editMode && (
-                    <ActivityForm
-                        key={(selectedActivity && selectedActivity.id) || 0}
-                        activity={selectedActivity!} />
-                )}
+                <h2>Activity filters</h2>
             </Grid.Column>
         </Grid>
 
