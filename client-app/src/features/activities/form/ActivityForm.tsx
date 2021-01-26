@@ -1,37 +1,38 @@
-import React, { useState, ChangeEvent, useContext } from 'react'
+import React, { useState, ChangeEvent, useContext, useEffect } from 'react'
 import { Button, Form, Segment } from 'semantic-ui-react'
 import { IActivity } from '../../../app/models/activity'
 import { v4 as uuid } from 'uuid';
 import ActivityStore from '../../../app/stores/activityStore'
 import { observer } from 'mobx-react-lite';
+import { RouteComponentProps } from 'react-router-dom';
 
-interface IProps {
-    activity: IActivity | null;
+interface DetailParams {
+    id: string;
 }
 
-const ActivityForm = ({ activity: initialFormState }: IProps): JSX.Element => {
+const ActivityForm = ({ match }: RouteComponentProps<DetailParams>): JSX.Element => {
 
     const activityStore = useContext(ActivityStore);
-    const { createActivity, editActivity, submitting, cancelFormOpen } = activityStore;
+    const { createActivity, editActivity, submitting, cancelFormOpen, activity: initialFormState, loadActivity } = activityStore;
 
-    const initializeForm = (): IActivity => {
-        if (initialFormState) {
-            return initialFormState;
+    useEffect(() => {
+        if (match.params.id) {
+            loadActivity(match.params.id).then(() => {
+                initialFormState && setActivity(initialFormState);
+            });
         }
-        else {
-            return {
-                id: '',
-                title: '',
-                description: '',
-                category: '',
-                date: '',
-                city: '',
-                venue: ''
-            };
-        }
-    }
+    })
 
-    const [activity, setActivity] = useState<IActivity>(initializeForm);
+
+    const [activity, setActivity] = useState<IActivity>({
+        id: '',
+        title: '',
+        description: '',
+        category: '',
+        date: '',
+        city: '',
+        venue: ''
+    });
 
     const handleInputChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
         const { name, value } = event.target;

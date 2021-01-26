@@ -1,6 +1,6 @@
 import { observer } from 'mobx-react-lite'
 import React, { useContext, useEffect } from 'react'
-import { RouteComponentProps } from 'react-router-dom'
+import { Link, RouteComponentProps } from 'react-router-dom'
 import { Button, Card, Image } from 'semantic-ui-react'
 import LoadingComponent from '../../../app/layout/LoadingComponent'
 import ActivityStore from '../../../app/stores/activityStore'
@@ -34,7 +34,7 @@ const ActivityDetails = ({ match, history }: RouteComponentProps<DetailParam>): 
             </Card.Content>
             <Card.Content extra>
                 <Button.Group widths={2}>
-                    <Button onClick={() => openEditForm(activity!.id)} basic color='blue' content='Edit' />
+                    <Button as={Link} to={`/manage/${activity.id}`} basic color='blue' content='Edit' />
                     <Button onClick={() => history.push('/activities')} basic color='grey' content='Cancel' />
                 </Button.Group>
             </Card.Content>
