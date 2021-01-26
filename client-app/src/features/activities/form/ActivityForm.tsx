@@ -13,7 +13,7 @@ interface DetailParams {
 const ActivityForm = ({ match }: RouteComponentProps<DetailParams>): JSX.Element => {
 
     const activityStore = useContext(ActivityStore);
-    const { createActivity, editActivity, submitting, cancelFormOpen, activity: initialFormState, loadActivity } = activityStore;
+    const { createActivity, editActivity, submitting, cancelFormOpen, activity: initialFormState, loadActivity, clearActivity } = activityStore;
 
     useEffect(() => {
         if (match.params.id) {
@@ -21,7 +21,11 @@ const ActivityForm = ({ match }: RouteComponentProps<DetailParams>): JSX.Element
                 initialFormState && setActivity(initialFormState);
             });
         }
-    })
+
+        return (() => {
+            clearActivity();
+        });
+    }, [loadActivity, match.params.id, initialFormState, clearActivity]);
 
 
     const [activity, setActivity] = useState<IActivity>({

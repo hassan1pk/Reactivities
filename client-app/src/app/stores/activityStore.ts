@@ -6,10 +6,10 @@ import agent from "../api/agent";
 configure({enforceActions: 'always'});
 
 class ActivityStore {
-    @observable activityRegistry = new Map<string,IActivity>();
+    @observable activityRegistry = new Map();
     @observable activities: IActivity[] = [];
     @observable loadingInitial = true;
-    @observable activity: IActivity | undefined;
+    @observable activity: IActivity | null = null;
     @observable editMode = false;
     @observable submitting = false;
     @observable target: string = '';
@@ -174,7 +174,7 @@ class ActivityStore {
     }
 
     @action openCreateForm = () => {
-        this.activity = undefined;
+        this.activity = null;
         this.editMode = true;
     }
 
@@ -184,7 +184,11 @@ class ActivityStore {
     }
 
     @action cancelSelectedActivity = () => {
-        this.activity = undefined;
+        this.activity = null;
+    }
+
+    @action clearActivity = () => {
+        this.activity = null;
     }
 
     @action cancelFormOpen = () => {
