@@ -10,23 +10,10 @@ interface DetailParams {
     id: string;
 }
 
-const ActivityForm = ({ match }: RouteComponentProps<DetailParams>): JSX.Element => {
+const ActivityForm = ({ match, history }: RouteComponentProps<DetailParams>): JSX.Element => {
 
     const activityStore = useContext(ActivityStore);
     const { createActivity, editActivity, submitting, cancelFormOpen, activity: initialFormState, loadActivity, clearActivity } = activityStore;
-
-    useEffect(() => {
-        if (match.params.id) {
-            loadActivity(match.params.id).then(() => {
-                initialFormState && setActivity(initialFormState);
-            });
-        }
-
-        return (() => {
-            clearActivity();
-        });
-    }, [loadActivity, match.params.id, initialFormState, clearActivity]);
-
 
     const [activity, setActivity] = useState<IActivity>({
         id: '',
@@ -38,18 +25,32 @@ const ActivityForm = ({ match }: RouteComponentProps<DetailParams>): JSX.Element
         venue: ''
     });
 
+    useEffect(() => {
+        if (match.params.id && activity.id.length === 0) {
+            loadActivity(match.params.id).then(() => {
+                initialFormState && setActivity(initialFormState);
+            });
+        }
+
+        return (() => {
+            clearActivity();
+        });
+    }, [loadActivity, match.params.id, initialFormState, clearActivity, activity.id.length]);
+
+
+
     const handleInputChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
         const { name, value } = event.target;
         setActivity({ ...activity, [name]: value });
     }
 
     const handleSubmit = () => {
-        console.log(activity);
+        //console.log(activity);
         if (activity.id.length === 0) {
             activity.id = uuid();
-            createActivity(activity);
+            createActivity(activity).then(() => history.push(`/activities/${activity.id}`));
         } else {
-            editActivity(activity);
+            editActivity(activity).then(() => history.push(`/activities/${activity.id}`));
         }
     }
 
