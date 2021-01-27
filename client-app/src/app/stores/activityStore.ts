@@ -7,10 +7,8 @@ configure({enforceActions: 'always'});
 
 class ActivityStore {
     @observable activityRegistry = new Map();
-    @observable activities: IActivity[] = [];
     @observable loadingInitial = true;
     @observable activity: IActivity | null = null;
-    @observable editMode = false;
     @observable submitting = false;
     @observable target: string = '';
 
@@ -74,7 +72,6 @@ class ActivityStore {
             runInAction(() => {
                 this.activityRegistry.set(activity.id, activity);
                 this.activity = activity;
-                this.editMode = false;
             });            
         }
         catch(error)
@@ -97,7 +94,6 @@ class ActivityStore {
             runInAction(() => {
                 this.activityRegistry.set(activity.id, activity);
                 this.activity = activity;
-                this.editMode = false;
             });
             
         }
@@ -173,33 +169,10 @@ class ActivityStore {
         return this.activityRegistry.get(id);
     }
 
-    @action openCreateForm = () => {
-        this.activity = null;
-        this.editMode = true;
-    }
-
-    @action openEditForm = (id: string) => {
-        this.activity = this.activityRegistry.get(id);
-        this.editMode = true;
-    }
-
-    @action cancelSelectedActivity = () => {
-        this.activity = null;
-    }
-
     @action clearActivity = () => {
         this.activity = null;
     }
-
-    @action cancelFormOpen = () => {
-        this.editMode = false;
-    }
- 
-    @action selectActivity = (id: string) => {
-        //this.selectedActivity = this.activities.find(a => a.id === id);
-        this.activity = this.activityRegistry.get(id);
-        this.editMode = false;
-    }
+    
 }
 
 export default createContext(new ActivityStore())

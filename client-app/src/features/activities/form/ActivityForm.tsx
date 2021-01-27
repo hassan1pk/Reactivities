@@ -13,7 +13,7 @@ interface DetailParams {
 const ActivityForm = ({ match, history }: RouteComponentProps<DetailParams>): JSX.Element => {
 
     const activityStore = useContext(ActivityStore);
-    const { createActivity, editActivity, submitting, cancelFormOpen, activity: initialFormState, loadActivity, clearActivity } = activityStore;
+    const { createActivity, editActivity, submitting, activity: initialFormState, loadActivity, clearActivity } = activityStore;
 
     const [activity, setActivity] = useState<IActivity>({
         id: '',
@@ -64,7 +64,7 @@ const ActivityForm = ({ match, history }: RouteComponentProps<DetailParams>): JS
                 <Form.Input onChange={handleInputChange} placeholder='City' name='city' value={activity.city} />
                 <Form.Input onChange={handleInputChange} placeholder='Venue' name='venue' value={activity.venue} />
                 <Button loading={submitting} floated='right' type='submit' content='Submit' positive />
-                <Button onClick={cancelFormOpen} floated='right' type='Cancel' content='Cancel' />
+                <Button onClick={() => history.push('/activities')} floated='right' type='Cancel' content='Cancel' />
             </Form>
         </Segment>
     )

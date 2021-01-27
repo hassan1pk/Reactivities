@@ -11,7 +11,7 @@ interface DetailParam {
 
 const ActivityDetails = ({ match, history }: RouteComponentProps<DetailParam>): JSX.Element => {
     const activityStore = useContext(ActivityStore);
-    const { activity, openEditForm, cancelSelectedActivity, loadActivity, loadingInitial } = activityStore;
+    const { activity, loadActivity, loadingInitial } = activityStore;
 
     useEffect(() => {
         loadActivity(match.params.id);

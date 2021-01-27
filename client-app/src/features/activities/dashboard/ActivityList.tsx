@@ -7,7 +7,7 @@ import ActivityStore from '../../../app/stores/activityStore'
 const ActivityList = (): JSX.Element => {
 
     const activityStore = useContext(ActivityStore);
-    const { selectActivity, activitiesByDate, deleteActivity, submitting, target } = activityStore;
+    const { activitiesByDate, deleteActivity, submitting, target } = activityStore;
 
     return (
         <Segment clearing>
