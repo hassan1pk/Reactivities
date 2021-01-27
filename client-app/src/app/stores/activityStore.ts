@@ -2,6 +2,7 @@ import { action, makeAutoObservable, observable, configure, runInAction } from "
 import { createContext, SyntheticEvent } from "react";
 import { IActivity } from "../models/activity";
 import agent from "../api/agent";
+import { act } from "react-dom/test-utils";
 
 configure({enforceActions: 'always'});
 
@@ -12,9 +13,49 @@ class ActivityStore {
     @observable submitting = false;
     @observable target: string = '';
 
-    get activitiesByDate() : IActivity[] {
+    get activitiesByDate() {
         //return this.activities.slice().sort((a,b) => Date.parse(a.date) - Date.parse(b.date));
-        return Array.from(this.activityRegistry.values()).sort((a,b) => Date.parse(a.date) - Date.parse(b.date));
+        //return Array.from(this.activityRegistry.values()).sort((a,b) => Date.parse(a.date) - Date.parse(b.date));
+        
+        //return this.groupActivitiesByCategory(Array.from(this.activityRegistry.values()));
+        return this.groupActivitiesByDate(Array.from(this.activityRegistry.values()));
+    }
+
+    groupActivitiesByDate(activities: IActivity[])
+    {
+        const sortedActivities = activities.sort((a,b) => Date.parse(a.date) - Date.parse(b.date));
+        /*console.log( sortedActivities.reduce((activities, activity) => {
+             const date = activity.date.split('T')[0];
+             activities[date] = activities[date] ? [...activities[date], activity] : [activity];
+             return activities
+         }, {} as {[key: string]: IActivity[]}));*/
+
+        return Object.entries(sortedActivities.reduce((activities, activity) => {
+            const date = activity.date.split('T')[0];
+            activities[date] = activities[date] ? [...activities[date], activity] : [activity];
+            return activities
+        }, {} as {[key: string]: IActivity[]}));
+
+    }
+
+    groupActivitiesByCategory(activities: IActivity[])
+    {
+        const sortedActivities = activities.sort((a,b) => {
+            if ( a.category < b.category ){
+                return -1;
+              }
+              if ( a.category > b.category ){
+                return 1;
+              }
+              return 0;
+        });
+        
+        return Object.entries(sortedActivities.reduce((activities, activity) => {
+            const category = activity.category;
+            activities[category] = activities[category] ? [...activities[category], activity] : [activity];
+            return activities
+        }, {} as {[key: string]: IActivity[]}));
+
     }
 
     constructor() {
@@ -38,7 +79,8 @@ class ActivityStore {
         try
         {
             this.loadingInitial = true;
-            const activities = await agent.Activities.list();   
+            const activities = await agent.Activities.list(); 
+            //console.log(this.groupActivitiesByDate(activities));  
             runInAction(() => {
                 activities.forEach((activity) => {
                     activity.date = activity.date.split(".")[0];
