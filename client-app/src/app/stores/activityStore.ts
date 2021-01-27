@@ -2,7 +2,6 @@ import { action, makeAutoObservable, observable, configure, runInAction } from "
 import { createContext, SyntheticEvent } from "react";
 import { IActivity } from "../models/activity";
 import agent from "../api/agent";
-import { act } from "react-dom/test-utils";
 
 configure({enforceActions: 'always'});
 
