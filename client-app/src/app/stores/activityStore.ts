@@ -194,7 +194,7 @@ class ActivityStore {
             {
                 runInAction(() => {
                     console.log(error);
-                });                
+                });            
             }
             finally
             {
