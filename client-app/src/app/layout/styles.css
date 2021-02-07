@@ -41,3 +41,11 @@ body {
 }
 
 /*end home page styles*/
+
+/*activity form styles*/
+
+.ui.dropdown .divider {
+  margin: 0px;
+}
+
+/*end activity form styles*/

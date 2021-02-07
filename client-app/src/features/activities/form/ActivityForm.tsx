@@ -8,6 +8,8 @@ import { RouteComponentProps } from 'react-router-dom';
 import { Form as FinalForm, Field } from 'react-final-form'
 import TextInput from '../../../app/common/form/TextInput';
 import TextAreaInput from '../../../app/common/form/TextAreaInput';
+import SelectInput from '../../../app/common/form/SelectInput';
+import { category } from '../../../app/common/options/categoryOptions';
 
 interface DetailParams {
     id: string;
@@ -69,7 +71,7 @@ const ActivityForm = ({ match, history }: RouteComponentProps<DetailParams>): JS
                             <Form onSubmit={handleSubmit}>
                                 <Field placeholder='Title' name='title' value={activity.title} component={TextInput} />
                                 <Field placeholder='Description' name='description' rows={3} value={activity.description} component={TextAreaInput} />
-                                <Field placeholder='Category' name='category' value={activity.category} component={TextInput} />
+                                <Field placeholder='Category' name='category' options={category} value={activity.category} component={SelectInput} />
                                 <Field placeholder='Date' name='date' value={activity.date} component={TextInput} />
                                 <Field placeholder='City' name='city' value={activity.city} component={TextInput} />
                                 <Field placeholder='Venue' name='venue' value={activity.venue} component={TextInput} />
