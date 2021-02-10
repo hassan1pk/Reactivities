@@ -1,6 +1,6 @@
 import React, { useState, ChangeEvent, useContext, useEffect } from 'react'
 import { Button, Form, Grid, Segment } from 'semantic-ui-react'
-import { IActivity } from '../../../app/models/activity'
+import { IActivityFormValues } from '../../../app/models/activity'
 import { v4 as uuid } from 'uuid';
 import ActivityStore from '../../../app/stores/activityStore'
 import { observer } from 'mobx-react-lite';
@@ -10,6 +10,7 @@ import TextInput from '../../../app/common/form/TextInput';
 import TextAreaInput from '../../../app/common/form/TextAreaInput';
 import SelectInput from '../../../app/common/form/SelectInput';
 import { category } from '../../../app/common/options/categoryOptions';
+import DateInput from '../../../app/common/form/DateInput';
 
 interface DetailParams {
     id: string;
@@ -20,18 +21,19 @@ const ActivityForm = ({ match, history }: RouteComponentProps<DetailParams>): JS
     const activityStore = useContext(ActivityStore);
     const { createActivity, editActivity, submitting, activity: initialFormState, loadActivity, clearActivity } = activityStore;
 
-    const [activity, setActivity] = useState<IActivity>({
-        id: '',
+    const [activity, setActivity] = useState<IActivityFormValues>({
+        id: undefined,
         title: '',
         description: '',
         category: '',
-        date: '',
+        date: undefined,
+        time: undefined,
         city: '',
         venue: ''
     });
 
     useEffect(() => {
-        if (match.params.id && activity.id.length === 0) {
+        if (match.params.id && activity.id) {
             loadActivity(match.params.id).then(() => {
                 initialFormState && setActivity(initialFormState);
             });
@@ -40,7 +42,7 @@ const ActivityForm = ({ match, history }: RouteComponentProps<DetailParams>): JS
         return (() => {
             clearActivity();
         });
-    }, [loadActivity, match.params.id, initialFormState, clearActivity, activity.id.length]);
+    }, [loadActivity, match.params.id, initialFormState, clearActivity, activity.id]);
 
     const handleFinalFormSubmit = (values: any) => {
         console.log(values);
@@ -72,7 +74,10 @@ const ActivityForm = ({ match, history }: RouteComponentProps<DetailParams>): JS
                                 <Field placeholder='Title' name='title' value={activity.title} component={TextInput} />
                                 <Field placeholder='Description' name='description' rows={3} value={activity.description} component={TextAreaInput} />
                                 <Field placeholder='Category' name='category' options={category} value={activity.category} component={SelectInput} />
-                                <Field placeholder='Date' name='date' value={activity.date} component={TextInput} />
+                                <Form.Group widths="equal">
+                                    <Field placeholder='Date' name='date' date={true} value={activity.date} component={DateInput} />
+                                    <Field placeholder='Time' name='time' time={true} value={activity.time} component={DateInput} />
+                                </Form.Group>
                                 <Field placeholder='City' name='city' value={activity.city} component={TextInput} />
                                 <Field placeholder='Venue' name='venue' value={activity.venue} component={TextInput} />
                                 <Button loading={submitting} floated='right' type='submit' content='Submit' positive />

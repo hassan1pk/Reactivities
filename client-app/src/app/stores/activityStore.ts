@@ -22,7 +22,7 @@ class ActivityStore {
 
     groupActivitiesByDate(activities: IActivity[])
     {
-        const sortedActivities = activities.sort((a,b) => Date.parse(a.date) - Date.parse(b.date));
+        const sortedActivities = activities.sort((a,b) => a.date.getTime() - b.date.getTime());
         /*console.log( sortedActivities.reduce((activities, activity) => {
              const date = activity.date.split('T')[0];
              activities[date] = activities[date] ? [...activities[date], activity] : [activity];
@@ -30,7 +30,7 @@ class ActivityStore {
          }, {} as {[key: string]: IActivity[]}));*/
 
         return Object.entries(sortedActivities.reduce((activities, activity) => {
-            const date = activity.date.split('T')[0];
+            const date = activity.date.toISOString().split('T')[0];
             activities[date] = activities[date] ? [...activities[date], activity] : [activity];
             return activities
         }, {} as {[key: string]: IActivity[]}));
@@ -82,7 +82,8 @@ class ActivityStore {
             //console.log(this.groupActivitiesByDate(activities));  
             runInAction(() => {
                 activities.forEach((activity) => {
-                    activity.date = activity.date.split(".")[0];
+                    activity.date = new Date(activity.date);
+                    //activity.date = activity.date.split(".")[0];
                     //this.activities.push(activity);
                     this.activityRegistry.set(activity.id, activity);
                 }); 
@@ -187,6 +188,7 @@ class ActivityStore {
                 this.loadingInitial = true;
                 activity = await agent.Activities.details(id);
                 runInAction(() => {
+                    activity.date = new Date(activity.date);
                     this.activity = activity;
                 });
             }
